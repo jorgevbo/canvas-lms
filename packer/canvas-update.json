@@ -49,7 +49,7 @@
   "provisioners": [
     {
       "type": "shell",
-      "script": "./scripts/00-prerrequisitos.sh",
+      "script": "scripts/00-prerrequisitos.sh",
       "environment_vars": [
         "CANVAS_REPOSITORY={{user `CANVAS_REPOSITORY`}}",
         "CANVAS_BRANCH={{user `CANVAS_BRANCH`}}",
@@ -61,59 +61,59 @@
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/amazon_s3.yml",
+      "source": "templates/canvas/config/amazon_s3.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/cache_store.yml",
+      "source": "templates/canvas/config/cache_store.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/database.yml",
+      "source": "templates/canvas/config/database.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/delayed_jobs.yml",
+      "source": "templates/canvas/config/delayed_jobs.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/domain.yml",
+      "source": "templates/canvas/config/domain.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/external_migration.yml",
+      "source": "templates/canvas/config/external_migration.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/file_store.yml",
+      "source": "templates/canvas/config/file_store.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/outgoing_mail.yml",
+      "source": "templates/canvas/config/outgoing_mail.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/redis.yml",
+      "source": "templates/canvas/config/redis.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "file",
-      "source": "./templates/canvas/config/security.yml",
+      "source": "templates/canvas/config/security.yml",
       "destination": "/var/canvas/config/"
     },
     {
       "type": "shell",
       "scripts": [
-        "./scripts/01-assets.sh",
-        "./scripts/02-update-database.sh"
+        "scripts/01-assets.sh",
+        "scripts/02-update-database.sh"
       ],
       "environment_vars": [
         "AWS_ACCESS_KEY={{user `AWS_ACCESS_KEY`}}",
@@ -132,19 +132,19 @@
     },
     {
       "type": "file",
-      "source": "./templates/apache/sites-available/canvas.conf",
+      "source": "templates/apache/sites-available/canvas.conf",
       "destination": "/tmp/"
     },
     {
       "type": "file",
-      "source": "./templates/apache/envvars",
+      "source": "templates/apache/envvars",
       "destination": "/tmp/"
     },
     {
       "type": "shell",
       "scripts": [
-        "./scripts/03-apache.sh",
-        "./scripts/99-postprocess.sh"
+        "scripts/03-apache.sh",
+        "scripts/99-postprocess.sh"
       ],
       "environment_vars": [
         "AWS_ACCESS_KEY={{user `AWS_ACCESS_KEY`}}",
