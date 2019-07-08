@@ -1,0 +1,23 @@
+# do not create a queue: section for your test environment
+test:
+  adapter: postgresql
+  encoding: utf8
+  database: canvas_test
+  host: localhost
+  username: canvas
+  timeout: 5000
+
+development:
+  adapter: postgresql
+  encoding: utf8
+  database: canvas_development
+  timeout: 5000
+
+production:
+  adapter: postgresql
+  encoding: utf8
+  database: "<%= ENV['RDS_DBNAME']%>"
+  host: "<%= ENV['RDS_ADDRESS']%>"
+  username: "<%= ENV['RDS_USERNAME']%>"
+  password: "<%= ENV['RDS_PASSWORD']%>"
+  timeout: 5000

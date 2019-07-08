@@ -1,0 +1,9 @@
+test:
+  domain: localhost
+
+development:
+  domain: "localhost:3000"
+
+production:
+  domain: "canvas.jorge-vasquez.org"
+  ssl: true

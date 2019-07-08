@@ -1,0 +1,171 @@
+{
+  "variables": {
+    "AWS_ACCESS_KEY": "",
+    "AWS_SECRET_KEY": "",
+    "REGION": "",
+    "SSH_SG_ID": "",
+    "INTERNAL_SG_ID": "",
+    "SUBNET_DEFAULT_A_ID": "",
+    "SUBNET_DEFAULT_B_ID": "",
+    "SUBNET_DEFAULT_C_ID": "",
+    "CANVAS_DOMAIN": "",
+    "AMI_NAME": "",
+    "AMI_OWNER": "",
+    "AMI_USER": "",
+    "INSTANCE_TYPE": "",
+    "CANVAS_REPOSITORY": "",
+    "CANVAS_BRANCH": "",
+    "APP_USER": "",
+    "S3_BUCKET": "",
+    "RDS_ADDRESS": "",
+    "RDS_USERNAME": "",
+    "RDS_PASSWORD": "",
+    "RDS_DBNAME": "",
+    "REDIS_ADDRESS": "",
+    "CANVAS_ENCRYPT_KEY": ""
+  },
+
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `AWS_ACCESS_KEY`}}",
+    "secret_key": "{{user `AWS_SECRET_KEY`}}",
+    "region": "{{user `REGION`}}",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "{{user `AMI_NAME`}}",
+        "root-device-type": "ebs"
+      },
+      "owners": ["{{user `AMI_OWNER`}}"],
+      "most_recent": true
+    },
+    "instance_type": "{{user `INSTANCE_TYPE`}}",
+    "ssh_username": "{{user `AMI_USER`}}",
+    "ami_name": "packer-canvas-{{timestamp}}",
+    "security_group_ids": ["{{user `SSH_SG_ID`}}", "{{user `INTERNAL_SG_ID`}}"],
+    "subnet_id": "{{ user `SUBNET_DEFAULT_A_ID`}}"
+  }],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "./scripts/00-prerrequisitos.sh",
+      "environment_vars": [
+        "CANVAS_REPOSITORY={{user `CANVAS_REPOSITORY`}}",
+        "CANVAS_BRANCH={{user `CANVAS_BRANCH`}}",
+        "RDS_ADDRESS={{user `RDS_ADDRESS`}}",
+        "RDS_USERNAME={{user `RDS_USERNAME`}}",
+        "RDS_PASSWORD={{user `RDS_PASSWORD`}}",
+        "RDS_DBNAME={{user `RDS_DBNAME`}}"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/amazon_s3.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/cache_store.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/database.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/delayed_jobs.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/domain.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/external_migration.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/file_store.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/outgoing_mail.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/redis.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/canvas/config/security.yml",
+      "destination": "/var/canvas/config/"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "./scripts/01-assets.sh",
+        "./scripts/02-update-database.sh"
+      ],
+      "environment_vars": [
+        "AWS_ACCESS_KEY={{user `AWS_ACCESS_KEY`}}",
+        "AWS_SECRET_KEY={{user `AWS_SECRET_KEY`}}",
+        "REGION={{user `REGION`}}",
+        "CANVAS_DOMAIN={{user `CANVAS_DOMAIN`}}",
+        "APP_USER={{user `APP_USER`}}",
+        "S3_BUCKET={{user `S3_BUCKET`}}",
+        "RDS_ADDRESS={{user `RDS_ADDRESS`}}",
+        "RDS_USERNAME={{user `RDS_USERNAME`}}",
+        "RDS_PASSWORD={{user `RDS_PASSWORD`}}",
+        "RDS_DBNAME={{user `RDS_DBNAME`}}",
+        "REDIS_ADDRESS={{user `REDIS_ADDRESS`}}",
+        "CANVAS_ENCRYPT_KEY={{user `CANVAS_ENCRYPT_KEY`}}"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "./templates/apache/sites-available/canvas.conf",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "./templates/apache/envvars",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "./scripts/03-apache.sh",
+        "./scripts/99-postprocess.sh"
+      ],
+      "environment_vars": [
+        "AWS_ACCESS_KEY={{user `AWS_ACCESS_KEY`}}",
+        "AWS_SECRET_KEY={{user `AWS_SECRET_KEY`}}",
+        "REGION={{user `REGION`}}",
+        "CANVAS_DOMAIN={{user `CANVAS_DOMAIN`}}",
+        "APP_USER={{user `APP_USER`}}",
+        "S3_BUCKET={{user `S3_BUCKET`}}",
+        "RDS_ADDRESS={{user `RDS_ADDRESS`}}",
+        "RDS_USERNAME={{user `RDS_USERNAME`}}",
+        "RDS_PASSWORD={{user `RDS_PASSWORD`}}",
+        "RDS_DBNAME={{user `RDS_DBNAME`}}",
+        "REDIS_ADDRESS={{user `REDIS_ADDRESS`}}",
+        "CANVAS_ENCRYPT_KEY={{user `CANVAS_ENCRYPT_KEY`}}"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "update-manifest.json"
+    }
+  ]
+}
