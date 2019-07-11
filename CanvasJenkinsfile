@@ -19,5 +19,13 @@ pipeline {
         sh 'bundle exec rspec spec/models/users/*.rb'
       }
     }
+    stage('PACKER') {
+      steps {
+        input message: 'Terraform Vars y Packer Vars a utilizar', parameters: [file(description: 'terraform_vars.json', name: 'terraform_vars.json'), file(description: 'packer_vars.json', name: 'packer_vars.json')]
+        sh 'pwd'
+        sh 'cd packer'
+        sh 'packer build -var-file=${terraform_vars.json} -var-file=${packer_vars.json} canvas-update.json'
+      }
+    }
   }
 }
