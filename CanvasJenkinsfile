@@ -26,9 +26,8 @@ pipeline {
         sh 'touch terraform_vars.json'
         sh 'rm terraform_vars.json'
         script {
-          env.TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: "terraform_vars.json")]
-          echo ${env.TERRAFORM_VARS}"
-          // writeFile file: 'terraform_vars.json', text: $algo
+          input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: "terraform_vars")]
+          writeFile file: 'terraform_vars.json', text: params.terraform_vars
         }
 
           // new hudson.FilePath(new File("$workspace/packer/terraform_vars.json")).copyFrom($terraform_vars)
