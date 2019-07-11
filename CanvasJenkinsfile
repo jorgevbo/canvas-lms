@@ -23,7 +23,10 @@ pipeline {
     }
     stage('PACKER') {
       steps {
-        input message: 'prueba', parameters: [file(description: '', name: 'prueba.txt')], submitterParameter: 'prueba'
+        script {
+          $terraform = input message: 'prueba', parameters: [text(defaultValue: '', description: '', name: 'prueba')]
+          writeFile file: 'terraform_vars.json', text: $terraform
+        }
         // script {
         //  input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: "terraform_vars")]
         //  writeFile file: 'terraform_vars.json', text: $terraform_vars
