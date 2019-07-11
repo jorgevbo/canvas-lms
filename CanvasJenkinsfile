@@ -25,6 +25,8 @@ pipeline {
       steps {
         script {
           $TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: 'TERRAFORM_VARS')]
+          echo $TERRAFORM_VARS
+
           $algo = readFile($TERRAFORM_VARS)
           writeFile file: 'terraform_vars.json', text: $algo
         }
