@@ -25,21 +25,19 @@ pipeline {
       steps {
         script {
           $TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: 'TERRAFORM_VARS')]
-          echo $TERRAFORM_VARS
-
-          $algo = readFile($TERRAFORM_VARS)
-          writeFile file: 'terraform_vars.json', text: $algo
+          new hudson.FilePath(new File("terraform_vars.json")).copyFrom($TERRAFORM_VARS)
+          // writeFile file: 'terraform_vars.json', text: $algo
         }
 
           // new hudson.FilePath(new File("$workspace/packer/terraform_vars.json")).copyFrom($terraform_vars)
 
-        input message: 'Packer Vars a utilizar', parameters: [file(description: 'packer_vars', name: 'packer_vars')]
-        script {
-          new hudson.FilePath(new File("$workspace/packer/packer_vars.json")).copyFrom($packer_vars)
-        }
+        // input message: 'Packer Vars a utilizar', parameters: [file(description: 'packer_vars', name: 'packer_vars')]
+        // script {
+        //   new hudson.FilePath(new File("$workspace/packer/packer_vars.json")).copyFrom($packer_vars)
+        // }
         
-        sh 'cd packer'
-        sh 'packer build -var-file=terraform_vars.json -var-file=packer_vars.json canvas-update.json'
+        // sh 'cd packer'
+        // sh 'packer build -var-file=terraform_vars.json -var-file=packer_vars.json canvas-update.json'
       }
     }
   }
