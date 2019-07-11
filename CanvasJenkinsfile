@@ -7,16 +7,20 @@ pipeline {
   stages {
     stage('BUILD') {
       steps {
+/**
         git branch: 'maestria-stable', changelog: false, credentialsId: 'github-jorgevbo', poll: false, url: 'https://github.com/jorgevbo/canvas-lms'
         sh 'bundle install'
+*/
       }
     }
     stage('TESTS') {
       steps {
+/**
         sh 'for config in amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration; do cp -v config/$config.yml.example config/$config.yml; done'
         sh 'bundle exec rails db:test:reset'
         // sh 'bundle exec rspec spec/models/*.rb'
         sh 'bundle exec rspec spec/models/users/*.rb'
+*/
       }
     }
     stage('PACKER') {
