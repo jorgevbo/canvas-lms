@@ -31,8 +31,10 @@ pipeline {
           $packer_vars = input message: 'Parametros de configuración para AMI Packer', parameters: [text(defaultValue: '', description: '', name: 'packer_vars')]
           writeFile file: 'packer/packer_vars.json', text: $packer_vars
         }
-        sh 'cd packer'
-        sh 'packer build -var-file=terraform_vars.json -var-file=packer_vars.json canvas-update.json'
+        sh '''
+          cd packer
+          packer build -var-file="terraform_vars.json" -var-file="packer_vars.json" canvas-update.json
+        '''
       }
     }
   }
