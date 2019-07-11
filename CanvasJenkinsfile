@@ -24,9 +24,9 @@ pipeline {
     stage('PACKER') {
       steps {
         script {
-          env.TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'terraform_vars', name: 'TERRAFORM_VARS')]
+          $TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'terraform_vars', name: 'TERRAFORM_VARS')]
+          writeFile file: 'terraform_vars.json', text: "loremipsum"
         }
-        sh "cat '${TERRAFORM_VARS}'"
 
           // new hudson.FilePath(new File("$workspace/packer/terraform_vars.json")).copyFrom($terraform_vars)
 
