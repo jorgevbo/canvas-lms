@@ -25,8 +25,8 @@ pipeline {
       steps {
         script {
           $TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: 'TERRAFORM_VARS')]
-          new hudson.FilePath(new File("terraform_vars.json")).copyFrom($TERRAFORM_VARS)
-          // writeFile file: 'terraform_vars.json', text: $algo
+          $algo = sh(script: "echo ${TERRAFORM_VARS}", returnStdout: true)
+          writeFile file: 'terraform_vars.json', text: $algo
         }
 
           // new hudson.FilePath(new File("$workspace/packer/terraform_vars.json")).copyFrom($terraform_vars)
