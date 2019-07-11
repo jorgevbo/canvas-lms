@@ -26,8 +26,8 @@ pipeline {
         sh 'touch terraform_vars.json'
         sh 'rm terraform_vars.json'
         script {
-          $TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: "terraform_vars.json")]
-          echo "${TERRAFORM_VARS}"
+          env.TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: "terraform_vars.json")]
+          echo ${env.TERRAFORM_VARS}"
           // writeFile file: 'terraform_vars.json', text: $algo
         }
 
