@@ -21,14 +21,16 @@ pipeline {
     }
     stage('PACKER') {
       steps {
-        def terraformFile = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'terraform_vars.json', name: 'terraform_vars.json')]
-        new hudson.FilePath(new File("$workspace/packer/terraform_vars.json")).copyFrom(terraformFile)
-        terraformFile.delete()
+        input message: 'Terraform Vars a utilizar', parameters: [file(description: 'terraform_vars', name: 'terraform_vars')]
+        script {
+          new hudson.FilePath(new File("$workspace/packer/terraform_vars.json")).copyFrom($terraform_vars)
+        }
 
-        def packerFile = input message: 'Packer Vars a utilizar', parameters: [file(description: 'packer_vars.json', name: 'packer_vars.json')]
-        new hudson.FilePath(new File("$workspace/packer/packer_vars.json")).copyFrom(packerFile)
-        packerFile.delete()
-
+        input message: 'Packer Vars a utilizar', parameters: [file(description: 'packer_vars', name: 'packer_vars')]
+        script {
+          new hudson.FilePath(new File("$workspace/packer/packer_vars.json")).copyFrom($packer_vars)
+        }
+        
         sh 'cd packer'
         sh 'packer build -var-file=terraform_vars.json -var-file=packer_vars.json canvas-update.json'
       }
