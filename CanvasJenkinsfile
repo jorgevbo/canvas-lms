@@ -23,6 +23,7 @@ pipeline {
     }
     stage('PACKER') {
       steps {
+        sh 'touch terraform_vars.json'
         script {
           $TERRAFORM_VARS = input message: 'Terraform Vars a utilizar', parameters: [file(description: 'Archivo de variables terraform JSON', name: "$workspace/terraform_vars.json")]
           // $algo = sh(script: "echo ${TERRAFORM_VARS}", returnStdout: true)
