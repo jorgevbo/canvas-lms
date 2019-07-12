@@ -10,4 +10,4 @@ read -ra PACKER <<< "$artifact_id"
 
 ami_string="variable \"packer_ami_id\" { default = \"${PACKER[1]}\" }"
 region_string="variable \"packer_region\" { default = \"${PACKER[0]}\" }"
-echo -e "$ami_string\n$region_string" > ..terraform/packer_variables.tf
+echo -e "$ami_string\n$region_string" > ../terraform/packer_variables.tf

@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('BUILD') {
       steps {
-        git branch: 'maestria-stable', changelog: false, credentialsId: 'github-jorgevbo', poll: false, url: 'https://github.com/jorgevbo/canvas-lms'
+//        git branch: 'maestria-stable', changelog: false, credentialsId: 'github-jorgevbo', poll: false, url: 'https://github.com/jorgevbo/canvas-lms'
         sh 'bundle install'
       }
     }
