@@ -7,9 +7,8 @@ pipeline {
   stages {
     stage('BUILD') {
       steps {
-//        git branch: 'maestria-stable', changelog: false, credentialsId: 'github-jorgevbo', poll: false, url: 'https://github.com/jorgevbo/canvas-lms'
-//        sh 'bundle install'
-        sh 'pwd'
+        git branch: 'maestria-stable', changelog: false, credentialsId: 'github-jorgevbo', poll: false, url: 'https://github.com/jorgevbo/canvas-lms'
+        sh 'bundle install'
       }
     }
     stage('TESTS') {
@@ -41,7 +40,15 @@ pipeline {
     }
     stage('DEPLOY') {
       steps {
-        sh 'pwd'
+        script {
+          $infraestructure_variables = input message: 'Parametros de configuración para Infraestructura', parameters: [text(defaultValue: '', description: '', name: 'infraestructure_variables')]
+          writeFile file: 'terraform/infraestructure_variables.tf', text: $infraestructure_variables
+        }
+        sh '''
+          #!/bin/bash
+          cd terraform
+          ./creation.sh
+        '''
       }
     }
   }
