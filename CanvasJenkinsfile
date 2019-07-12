@@ -33,7 +33,7 @@ pipeline {
         }
         sh '''
           cd packer
-          rm update-manifest.json
+          rm -f update-manifest.json
           packer build -var-file="terraform_vars.json" -var-file="packer_vars.json" canvas-update.json
           artifact_id=`jq ".builds[0].artifact_id" update-manifest.json`
           chars=${#artifact_id}
