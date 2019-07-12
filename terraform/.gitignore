@@ -1,0 +1,4 @@
+infraestructure_variables.tf
+packer_variables.tf
+terraform.tfstate
+terraform.tfstate.backup
