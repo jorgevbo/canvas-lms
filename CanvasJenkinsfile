@@ -18,7 +18,7 @@ pipeline {
         sh 'bundle exec rspec spec/models/users/*.rb'
       }
     }
-    stage('PACKER') {
+    stage('AMI GENERATION') {
       steps {
         script {
           writeFile file: 'packer/terraform_vars.json', text: params.terraform_vars
