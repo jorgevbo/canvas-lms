@@ -21,13 +21,9 @@ pipeline {
     stage('PACKER') {
       steps {
         script {
-//          $terraform_vars = input message: 'Parametros de configuración para Infraestructura Terraform', parameters: [text(defaultValue: '', description: '', name: 'terraform_vars')]
-//          writeFile file: 'packer/terraform_vars.json', text: $terraform_vars
           writeFile file: 'packer/terraform_vars.json', text: params.terraform_vars
         }
         script {
-//          $packer_vars = input message: 'Parametros de configuración para AMI Packer', parameters: [text(defaultValue: '', description: '', name: 'packer_vars')]
-//          writeFile file: 'packer/packer_vars.json', text: $packer_vars
           input message: 'Continuar con la generación de AMI mediante Packer?', ok: 'Continuar'
           writeFile file: 'packer/packer_vars.json', text: params.packer_vars
         }
@@ -43,8 +39,6 @@ pipeline {
     stage('DEPLOY') {
       steps {
         script {
-//          $infraestructure_variables = input message: 'Parametros de configuración para Infraestructura', parameters: [text(defaultValue: '', description: '', name: 'infraestructure_variables')]
-//          writeFile file: 'terraform/infraestructure_variables.tf', text: $infraestructure_variables
           input message: 'Continuar con el Deploy de AMI?', ok: 'Continuar'
           writeFile file: 'terraform/infraestructure_variables.tf', text: params.infraestructure_variables
         }
