@@ -7,28 +7,29 @@ pipeline {
   stages {
     stage('BUILD') {
       steps {
-//        git branch: 'maestria-stable', changelog: false, credentialsId: 'github-jorgevbo', poll: false, url: 'https://github.com/jorgevbo/canvas-lms'
         sh 'bundle install'
       }
     }
     stage('TESTS') {
       steps {
-//        sh 'for config in amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration; do cp -v config/$config.yml.example config/$config.yml; done'
-//        sh 'bundle exec rails db:test:reset'
+        sh 'for config in amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration; do cp -v config/$config.yml.example config/$config.yml; done'
+        sh 'bundle exec rails db:test:reset'
         // sh 'bundle exec rspec spec/models/*.rb'
-//        sh 'bundle exec rspec spec/models/users/*.rb'
-          sh 'pwd'
+        sh 'bundle exec rspec spec/models/users/*.rb'
       }
     }
     stage('PACKER') {
       steps {
         script {
-          $terraform_vars = input message: 'Parametros de configuración para Infraestructura Terraform', parameters: [text(defaultValue: '', description: '', name: 'terraform_vars')]
-          writeFile file: 'packer/terraform_vars.json', text: $terraform_vars
+//          $terraform_vars = input message: 'Parametros de configuración para Infraestructura Terraform', parameters: [text(defaultValue: '', description: '', name: 'terraform_vars')]
+//          writeFile file: 'packer/terraform_vars.json', text: $terraform_vars
+          writeFile file: 'packer/terraform_vars.json', text: $params.terraform_vars
         }
         script {
-          $packer_vars = input message: 'Parametros de configuración para AMI Packer', parameters: [text(defaultValue: '', description: '', name: 'packer_vars')]
-          writeFile file: 'packer/packer_vars.json', text: $packer_vars
+//          $packer_vars = input message: 'Parametros de configuración para AMI Packer', parameters: [text(defaultValue: '', description: '', name: 'packer_vars')]
+//          writeFile file: 'packer/packer_vars.json', text: $packer_vars
+          input message: 'Continuar con la generación de AMI mediante Packer?', ok: 'Continuar'
+          writeFile file: 'packer/packer_vars.json', text: $params.packer_vars
         }
         sh '''
           #!/bin/bash
@@ -41,8 +42,10 @@ pipeline {
     stage('DEPLOY') {
       steps {
         script {
-          $infraestructure_variables = input message: 'Parametros de configuración para Infraestructura', parameters: [text(defaultValue: '', description: '', name: 'infraestructure_variables')]
-          writeFile file: 'terraform/infraestructure_variables.tf', text: $infraestructure_variables
+//          $infraestructure_variables = input message: 'Parametros de configuración para Infraestructura', parameters: [text(defaultValue: '', description: '', name: 'infraestructure_variables')]
+//          writeFile file: 'terraform/infraestructure_variables.tf', text: $infraestructure_variables
+          input message: 'Continuar con el Deploy de AMI?', ok: 'Continuar'
+          writeFile file: 'terraform/infraestructure_variables.tf', text: $params.infraestructure_variables
         }
         sh '''
           #!/bin/bash
