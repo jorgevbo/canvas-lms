@@ -37,6 +37,7 @@ pipeline {
           rm -f update-manifest.json
           ./canvas_update.sh
         '''
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'packer/update-manifest.json', onlyIfSuccessful: true
       }
     }
     stage('DEPLOY') {
@@ -52,6 +53,8 @@ pipeline {
           cd terraform
           ./creation.sh
         '''
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'terraform/terraform.tfstate', onlyIfSuccessful: true
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'terraform/packer_variables.tf', onlyIfSuccessful: true
       }
     }
   }
