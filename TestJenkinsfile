@@ -1,0 +1,14 @@
+pipeline {
+  agent any
+  environment {
+      PGPASSWORD = 'canvas'
+      RAILS_ENV = 'test'
+  }
+  stages {
+    stage('BUILD') {
+      steps {
+        sh 'bundle install'
+      }
+    }
+  }
+}
